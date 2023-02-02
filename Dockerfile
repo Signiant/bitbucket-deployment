@@ -8,7 +8,7 @@ LABEL maintainer=sre@signiant.com
 # && Install yarn
 # && Install pip
 RUN apt update \
-  && apt install -y python3 python3-pip figlet jq
+  && apt install -y python python3 python3-pip figlet jq
 
 # Update python setuptool
 RUN pip install --upgrade setuptools
@@ -40,5 +40,7 @@ RUN chmod +r /tmp/gem.packages.list \
 # Install dns - used by eb_check_live_env.py
 RUN pip install awscli shyaml boto requests maestroops datadog slackclient pyyaml dnspython
 RUN pip3 install awscli shyaml boto3 requests maestroops datadog slackclient dnspython3 pyyaml
+RUN python --version
+RUN which python
 
 ADD figlet-fonts /figlet-fonts
