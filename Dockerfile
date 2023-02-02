@@ -8,7 +8,7 @@ LABEL maintainer=sre@signiant.com
 # && Install yarn
 # && Install pip
 RUN apt update \
-  && apt install -y python3 python3-pip
+  && apt install -y python3 python3-pip figlet jq
 
 # Update python setuptool
 RUN pip install --upgrade setuptools
