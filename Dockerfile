@@ -8,9 +8,9 @@ LABEL maintainer=sre@signiant.com
 # && Install yarn
 # && Install pip
 RUN apt update \
-  && apt install -y python python3 python3-pip figlet jq
+  && apt install -y python3 python3-pip figlet jq
 
-# Update python setuptool
+#Update python setuptool
 RUN pip install --upgrade setuptools
 
 # Install docker-compose
@@ -38,9 +38,8 @@ RUN chmod +r /tmp/gem.packages.list \
 # Install boto and requests - used by the S3 MIME type setter
 # Install MaestroOps, slackclient, and datadog
 # Install dns - used by eb_check_live_env.py
-RUN pip install awscli shyaml boto requests maestroops datadog slackclient pyyaml dnspython
-RUN pip3 install awscli shyaml boto3 requests maestroops datadog slackclient dnspython3 pyyaml
-RUN python --version
-RUN which python
+RUN pip install awscli shyaml boto boto3 requests maestroops datadog slackclient pyyaml dnspython3 pyyaml
+
+RUN ln -s /usr/bin/python3 /usr/bin/python
 
 ADD figlet-fonts /figlet-fonts
