@@ -39,7 +39,9 @@ RUN chmod +r /tmp/gem.packages.list \
 # Install MaestroOps, slackclient, and datadog
 # Install dns - used by eb_check_live_env.py
 RUN pip install awscli shyaml boto boto3 requests maestroops datadog slackclient pyyaml dnspython3 pyyaml
-
 RUN ln -s /usr/bin/python3 /usr/bin/python
+
+#install n module
+RUN npm install -g n
 
 ADD figlet-fonts /figlet-fonts
