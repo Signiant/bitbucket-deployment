@@ -2,11 +2,6 @@ FROM node:18-bullseye
 LABEL maintainer=sre@signiant.com
 
 # Install a base set of packages from the default repo
-# && Install packages from the repoforge repo
-# && make sure we're running latest of everything
-# && Install the nodejs package from nodesource
-# && Install yarn
-# && Install pip
 RUN apt update \
   && apt install -y python3 python3-pip figlet jq sudo
 
@@ -33,12 +28,9 @@ RUN chmod +r /tmp/gem.packages.list \
     && /bin/bash -l -c "gem install `cat /tmp/gem.packages.list | tr \"\\n\" \" \"`"
 
 # python module installs:
-# Install the AWS CLI - used by promo process
-# Install shyaml - used by promo process to ECS
-# Install boto and requests - used by the S3 MIME type setter
-# Install MaestroOps, slackclient, and datadog
-# Install dns - used by eb_check_live_env.py
 RUN pip install awscli shyaml boto boto3 requests maestroops datadog slackclient pyyaml dnspython3 pyyaml
+
+# always use python3
 RUN ln -s /usr/bin/python3 /usr/bin/python
 
 #install n module
