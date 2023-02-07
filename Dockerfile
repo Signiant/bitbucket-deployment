@@ -28,7 +28,8 @@ RUN chmod +r /tmp/gem.packages.list \
     && /bin/bash -l -c "gem install `cat /tmp/gem.packages.list | tr \"\\n\" \" \"`"
 
 # python module installs:
-RUN pip install awscli shyaml boto boto3 requests maestroops datadog slackclient pyyaml dnspython3 pyyaml
+COPY requirements.txt /tmp/requirements.txt
+RUN pip install -r /tmp/requirements.txt
 
 # always use python3
 RUN ln -s /usr/bin/python3 /usr/bin/python
