@@ -1,0 +1,11 @@
+awscli
+shyaml
+boto
+boto3
+requests
+maestroops
+datadog
+slackclient
+pyyaml
+dnspython3
+pyyaml
