@@ -13,7 +13,7 @@ RUN apt update \
 RUN pip install --upgrade setuptools
 
 # Install docker-compose
-RUN pip install docker-compose
+RUN pip install docker-compose helm
 
 #install RVM 1.9.3
 RUN /bin/bash -l -c "apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 3B4FE6ACC0B21F32"
