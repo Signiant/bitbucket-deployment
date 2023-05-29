@@ -1,9 +1,13 @@
 FROM node:18-bullseye
 LABEL maintainer=sre@signiant.com
 
+# Install Terraform
+RUN wget -O- https://apt.releases.hashicorp.com/gpg | gpg --dearmor > /usr/share/keyrings/hashicorp-archive-keyring.gpg
+RUN echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com bullseye main" > /etc/apt/sources.list.d/hashicorp.list
+
 # Install a base set of packages from the default repo
 RUN apt update \
-  && apt install -y python3 python3-pip figlet jq sudo
+  && apt install -y python3 python3-pip figlet jq sudo terraform
 
 #Update python setuptool
 RUN pip install --upgrade setuptools
