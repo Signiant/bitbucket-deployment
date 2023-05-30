@@ -1,15 +1,19 @@
 FROM node:18-bullseye
 LABEL maintainer=sre@signiant.com
 
+# Add Terraform repo
+RUN wget -O- https://apt.releases.hashicorp.com/gpg | gpg --dearmor > /usr/share/keyrings/hashicorp-archive-keyring.gpg
+RUN echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com bullseye main" > /etc/apt/sources.list.d/hashicorp.list
+
 # Install a base set of packages from the default repo
 RUN apt update \
-  && apt install -y python3 python3-pip figlet jq sudo
+  && apt install -y python3 python3-pip figlet jq sudo terraform
 
 #Update python setuptool
 RUN pip install --upgrade setuptools
 
 # Install docker-compose
-RUN pip install docker-compose
+RUN pip install docker-compose helm
 
 #install RVM 1.9.3
 RUN /bin/bash -l -c "apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 3B4FE6ACC0B21F32"
