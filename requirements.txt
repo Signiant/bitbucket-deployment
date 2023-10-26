@@ -10,3 +10,4 @@ slackclient
 pyyaml
 dnspython3
 pyyaml
+slackclient
