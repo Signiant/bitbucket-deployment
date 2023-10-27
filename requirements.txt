@@ -6,7 +6,7 @@ boto3
 requests
 maestroops
 datadog
+slack-sdk
 slackclient
 pyyaml
 dnspython3
-pyyaml
