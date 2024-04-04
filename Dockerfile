@@ -8,12 +8,19 @@ RUN echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] http
 # Install a base set of packages from the default repo
 RUN apt update \
   && apt install -y python3 python3-pip figlet jq sudo terraform
-
+  
 #Update python setuptool
 RUN pip install --upgrade setuptools
 
 # Install docker-compose
 RUN pip install docker-compose helm
+
+# Install k8s tooling
+RUN apt-get install --yes --no-install-recommends
+RUN curl -LO https://dl.k8s.io/release/v1.29.2/bin/linux/amd64/kubectl && install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+RUN wget https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 && \
+    chmod 700 get-helm-3 &&\
+    ./get-helm-3
 
 #install RVM 1.9.3
 RUN /bin/bash -l -c "apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 3B4FE6ACC0B21F32"
