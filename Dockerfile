@@ -1,4 +1,4 @@
-FROM node:18-bullseye
+FROM node:20-bullseye
 LABEL maintainer=sre@signiant.com
 
 # Add Terraform repo
@@ -7,7 +7,7 @@ RUN echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] http
 
 # Install a base set of packages from the default repo
 RUN apt update \
-  && apt install -y python3 python3-pip figlet jq sudo terraform
+  && apt install -y python3 python3-pip figlet jq sudo terraform ssh
   
 #Update python setuptool
 RUN pip install --upgrade setuptools
