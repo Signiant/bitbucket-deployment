@@ -1,13 +1,15 @@
 FROM node:20-bullseye
 LABEL maintainer=sre@signiant.com
 
-# Add Terraform repo
-RUN wget -O- https://apt.releases.hashicorp.com/gpg | gpg --dearmor > /usr/share/keyrings/hashicorp-archive-keyring.gpg
-RUN echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com bullseye main" > /etc/apt/sources.list.d/hashicorp.list
+# Install and configure tenv
+RUN wget https://github.com/tofuutils/tenv/releases/download/v2.7.9/tenv_v2.7.9_amd64.deb \
+  && dpkg -i tenv_v2.7.9_amd64.deb \
+  && TENV_AUTO_INSTALL=true
+  && export TFENV_TERRAFORM_DEFAULT_VERSION=1.3.1
 
 # Install a base set of packages from the default repo
 RUN apt update \
-  && apt install -y python3 python3-pip figlet jq sudo terraform ssh
+  && apt install -y python3 python3-pip figlet jq sudo ssh
   
 #Update python setuptool
 RUN pip install --upgrade setuptools
