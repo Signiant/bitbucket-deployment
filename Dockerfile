@@ -9,7 +9,7 @@ RUN export ARCH=$(echo ${BUILDPLATFORM} | cut -d / -f 2) \
   && wget https://github.com/tofuutils/tenv/releases/download/v${TENV_VERSION}/tenv_v${TENV_VERSION}_${ARCH}.deb \
   && dpkg -i tenv_v${TENV_VERSION}_${ARCH}.deb
 ENV TENV_AUTO_INSTALL=true
-ENV TFENV_TERRAFORM_DEFAULT_VERSION=1.3.1
+ENV TFENV_TERRAFORM_DEFAULT_VERSION=1.7.5
 
 # Install a base set of packages from the default repo
 RUN apt update \
