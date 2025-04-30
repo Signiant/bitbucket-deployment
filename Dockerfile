@@ -3,6 +3,7 @@ LABEL maintainer=sre@signiant.com
 
 ARG BUILDPLATFORM
 ARG TENV_VERSION="4.4.0"
+ARG KUBERNETES_VERSION="1.29.2"
 
 # Install a base set of packages from the default repo
 COPY apt.packages.list /tmp/apt.packages.list
@@ -38,7 +39,7 @@ RUN export ARCH=$(echo ${BUILDPLATFORM} | cut -d / -f 2) \
 
 # Install k8s tooling
 RUN export ARCH=$(echo ${BUILDPLATFORM} | cut -d / -f 2) \
-  && curl -LO https://dl.k8s.io/release/v1.29.2/bin/linux/${ARCH}/kubectl \
+  && curl -LO https://dl.k8s.io/release/v${KUBERNETES_VERSION}/bin/linux/${ARCH}/kubectl \
   && install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl \
   && wget https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 \
   && chmod 700 get-helm-3 \
