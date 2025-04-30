@@ -7,3 +7,5 @@ requests
 datadog
 slack_sdk
 pyyaml
+maestroops
+dnspython3

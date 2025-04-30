@@ -19,7 +19,7 @@ RUN /bin/bash -l -c "echo 'gem: --no-ri --no-rdoc' > ~/.gemrc" \
   && gem install `cat /tmp/gem.packages.list | tr "\n" " "` \
   && rm /tmp/gem.packages.list
 
-# Install Python modules and link python to python3
+# Install Python modules and link python to python3 (Note: docker-compose and helm must be installed first otherwise the image won't build)
 COPY requirements.txt /tmp/requirements.txt
 RUN pip install docker-compose helm \
   && pip install --upgrade setuptools \
