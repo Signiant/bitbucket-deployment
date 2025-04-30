@@ -4,9 +4,6 @@ shyaml
 boto
 boto3
 requests
-maestroops
 datadog
 slack_sdk
-slackclient
 pyyaml
-dnspython3

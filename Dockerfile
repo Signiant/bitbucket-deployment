@@ -1,51 +1,49 @@
 FROM node:20-bullseye
 LABEL maintainer=sre@signiant.com
 
-# Add Terraform repo
-RUN wget -O- https://apt.releases.hashicorp.com/gpg | gpg --dearmor > /usr/share/keyrings/hashicorp-archive-keyring.gpg
-RUN echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com bullseye main" > /etc/apt/sources.list.d/hashicorp.list
+ARG BUILDPLATFORM
+ARG TENV_VERSION="4.4.0"
+ARG KUBERNETES_VERSION="1.29.2"
 
 # Install a base set of packages from the default repo
+COPY apt.packages.list /tmp/apt.packages.list
 RUN apt update \
-  && apt install -y python3 python3-pip figlet jq sudo terraform ssh
-  
-#Update python setuptool
-RUN pip install --upgrade setuptools
+  && apt upgrade -y \
+  && apt install -y --no-install-recommends `cat /tmp/apt.packages.list | tr "\n" " "` \
+  && rm /tmp/apt.packages.list
 
-# Install docker-compose
-RUN pip install docker-compose helm
-
-# Install k8s tooling
-RUN apt-get install --yes --no-install-recommends
-RUN curl -LO https://dl.k8s.io/release/v1.29.2/bin/linux/amd64/kubectl && install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
-RUN wget https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 && \
-    chmod 700 get-helm-3 &&\
-    ./get-helm-3
-
-#install RVM 1.9.3
-RUN /bin/bash -l -c "apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 3B4FE6ACC0B21F32"
-RUN /bin/bash -l -c "echo 'deb http://security.ubuntu.com/ubuntu bionic-security main' | tee -a /etc/apt/sources.list"
-RUN /bin/bash -l -c "gpg --keyserver keyserver.ubuntu.com --recv-key 409B6B1796C275462A1703113804BB82D39DC0E3 7D2BAF1CF37B13E2069D6956105BD0E739499BDB"
-RUN /bin/bash -l -c "curl -L get.rvm.io | bash -s stable"
-RUN /bin/bash -l -c "rvm get 1.29.7"
-RUN /bin/bash -l -c "rvm install 1.9.3"
-RUN /bin/bash -l -c "echo 'gem: --no-ri --no-rdoc' > ~/.gemrc"
-RUN /bin/bash -l -c "gem install bundler -v 1.17.3"
-RUN . /etc/profile.d/rvm.sh
-
-#Install required gems for our promotion scripts
+# Install required gems for our promotion scripts
 COPY gem.packages.list /tmp/gem.packages.list
-RUN chmod +r /tmp/gem.packages.list \
-    && /bin/bash -l -c "gem install `cat /tmp/gem.packages.list | tr \"\\n\" \" \"`"
+RUN /bin/bash -l -c "echo 'gem: --no-ri --no-rdoc' > ~/.gemrc" \
+  && chmod +r /tmp/gem.packages.list \
+  && gem install `cat /tmp/gem.packages.list | tr "\n" " "` \
+  && rm /tmp/gem.packages.list
 
-# python module installs:
+# Install Python modules and link python to python3
 COPY requirements.txt /tmp/requirements.txt
-RUN pip install -r /tmp/requirements.txt
+RUN pip install docker-compose helm \
+  && pip install --upgrade setuptools \
+  && pip install -r /tmp/requirements.txt \
+  && ln -s /usr/bin/python3 /usr/bin/python \
+  && rm /tmp/requirements.txt
 
-# always use python3
-RUN ln -s /usr/bin/python3 /usr/bin/python
-
-#install n module
+# Install n module
 RUN npm install -g n
 
+# Install and configure tenv
+ENV TENV_AUTO_INSTALL=true
+ENV TFENV_TERRAFORM_DEFAULT_VERSION=1.7.5
+RUN export ARCH=$(echo ${BUILDPLATFORM} | cut -d / -f 2) \
+  && wget https://github.com/tofuutils/tenv/releases/download/v${TENV_VERSION}/tenv_v${TENV_VERSION}_${ARCH}.deb \
+  && dpkg -i tenv_v${TENV_VERSION}_${ARCH}.deb
+
+# Install k8s tooling
+RUN export ARCH=$(echo ${BUILDPLATFORM} | cut -d / -f 2) \
+  && curl -LO https://dl.k8s.io/release/v${KUBERNETES_VERSION}/bin/linux/${ARCH}/kubectl \
+  && install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl \
+  && wget https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 \
+  && chmod 700 get-helm-3 \
+  && ./get-helm-3
+
+# Add figlet-fonts directory
 ADD figlet-fonts /figlet-fonts
