@@ -1,4 +1,4 @@
-FROM node:22-bullseye
+FROM node:20-bullseye
 LABEL maintainer=sre@signiant.com
 
 ARG BUILDPLATFORM
