@@ -6,6 +6,8 @@ boto3
 requests
 datadog
 slack_sdk
+pyfiglet
 pyyaml
 maestroops
 dnspython3
+datadog_api_client
