@@ -11,3 +11,5 @@ pyyaml
 maestroops
 dnspython3
 datadog_api_client
+aws-cdk-lib
+constructs

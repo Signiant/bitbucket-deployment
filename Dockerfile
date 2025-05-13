@@ -27,8 +27,8 @@ RUN pip install docker-compose helm \
   && ln -s /usr/bin/python3 /usr/bin/python \
   && rm /tmp/requirements.txt
 
-# Install n module
-RUN npm install -g n
+# Install node modules
+RUN npm install -g n aws-cdk
 
 # Install and configure tenv
 ENV TENV_AUTO_INSTALL=true
